@@ -4,22 +4,40 @@ import random
 words = ["python", "programación", "computadora", "código", "desarrollo",
 "inteligencia"]
 
+# Vocales
+vowels = "aeiou"
+
 # Elegir una palabra al azar
 secret_word = random.choice(words)
 
 # Maximo de fallos
 max_fails = 5
 
-# Número máximo de intentos permitidos
-max_attempts = 10
-
 # Lista para almacenar las letras adivinadas
 guessed_letters = []
 
 print("¡Bienvenido al juego de adivinanzas!")
+
+# Seleccion de dificultad
+print("""Ingresa 1 para: Facil
+Ingresa 2 para: Media
+Ingresa 3 para: Dificil""")
+
+diff = int(input("Selecciona una difficultad: "))
+
+# Verificar que la seleccion es valida
+while diff > 3 or diff < 1:
+    diff = int(input("Selecciona una dificultad valida: "))
+    
 print("Estoy pensando en una palabra. ¿Puedes adivinar cuál es?")
 
-word_displayed = "_" * len(secret_word)
+# Modifica la muestra de la palabra secreta dependiendo la dificultad
+if diff == 1:
+    word_displayed = "".join([letter if letter in vowels else "_" for letter in secret_word])
+elif diff == 2:
+    word_displayed = secret_word[0] + "_" * (len(secret_word)-2) + secret_word[-1]
+else:
+    word_displayed = "_" * len(secret_word) 
 
 # Mostrarla palabra parcialmente adivinada
 print(f"Palabra: {word_displayed}")
@@ -27,6 +45,17 @@ print(f"Palabra: {word_displayed}")
 fails = 0
 
 while fails < max_fails:
+    
+    # Se cargan las vocales a las letras adivinadas
+    if diff == 1:
+        for letter in secret_word:
+            if letter in vowels:
+                guessed_letters.append(letter)
+    
+    # Se cargan la primer y ultima letra a las adivinadas
+    elif diff == 2:
+        guessed_letters.append(word_displayed[0])
+        guessed_letters.append(word_displayed[-1])
     
     # Pedir al jugador que ingrese una letra
     letter = input("Ingresa una letra: ").lower()
